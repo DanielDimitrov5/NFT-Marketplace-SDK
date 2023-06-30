@@ -352,6 +352,33 @@ class NFTMarketplaceSDK {
             console.log(error);
         }
     }
+
+    async getOffers(itemId) {
+        try {
+            const contract = this.marketplaceContract;
+    
+            const offerers = [...new Set(await contract.getOfferers(itemId))];
+    
+            const offerssPromises = offerers.map(async (offerer) => {
+                return contract.offers(itemId, offerer);
+            });
+    
+            const offers = await Promise.all(offerssPromises);
+    
+            const offersModified = offers.map((offer, i) => {
+                return {
+                    offerer: offerers[i],
+                    price: offer.price,
+                    isAccepted: offer.isAccepted,
+                    seller: offer.seller
+                }
+            });
+    
+            return offersModified;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 export default NFTMarketplaceSDK;
