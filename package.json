@@ -1,5 +1,5 @@
 {
-  "name": "nft-marketplace-sdk",
+  "name": "nft-mp-sdk",
   "version": "1.0.0",
   "description": "NFT-Marketplace SDK",
   "main": "index.js",
