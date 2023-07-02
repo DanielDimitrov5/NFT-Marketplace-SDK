@@ -1,15 +1,25 @@
 import { ethers } from "ethers";
-import marketplaceABI from "../NFT-Marketplace-SDK/contractData/abi/NFTMarketplace.json" assert { type: 'json' };
-import nftABI from "../NFT-Marketplace-SDK/contractData/abi/NFT.json" assert { type: 'json' };
+import marketplaceABI from "./contractData/abi/NFTMarketplace.json" assert { type: 'json' };
+import nftABI from "./contractData/abi/NFT.json" assert { type: 'json' };
+import nftBytecode from "./contractData/NftBytecode.json" assert { type: 'json' };
+import marketplaceBytecode from "./contractData/MarketplaceBytecode.json" assert { type: 'json' };
 import axios from "axios";
 import { infuraIpfsClient } from "./ipfsClient.js";
 
 import dotenv from 'dotenv';
 dotenv.config();
 
+export const deployNewMarketplace = async (signer, feePercent) => {
+    const factory = new ethers.ContractFactory(marketplaceABI, marketplaceBytecode.bytecode, signer);
+    const contract = await factory.deploy(feePercent);
+    await contract.deployed();
+    return contract;
+}
+
 class NFTMarketplaceSDK {
     constructor(signerOrProvider, contractAddress) {
         this.signerOrProvider = signerOrProvider;
+        this.provider = signerOrProvider.provider || signerOrProvider;
         this.marketplace = {
             address: contractAddress,
             abi: marketplaceABI,
@@ -375,6 +385,161 @@ class NFTMarketplaceSDK {
             });
     
             return offersModified;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async acceptOffer(itemId, offerer) {
+        try {
+
+            const item = (await this.getItem(itemId)).item;
+            const nftContractAddress = item.nftContract;
+            const tokenId = item.tokenId;
+    
+            const approve = await this.checkApproval(nftContractAddress, tokenId);
+    
+            if (approve != this.marketplace.address) {
+                const aprrovalTx = await this.approveToken(nftContractAddress, tokenId);
+    
+                if (aprrovalTx !== 1) {
+                    alert('Approval failed');
+                    return;
+                }
+            }
+    
+            const contract = this.marketplaceContract;
+    
+            const transaction = await contract.acceptOffer(itemId, offerer, { gasLimit: 300000 });
+    
+            const tx = await transaction.wait();
+    
+            return tx.status;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async getAccountsOffers(address)  {
+        try {
+            const contract = this.marketplaceContract;
+    
+            const itemCount = await contract.itemCount();
+    
+            const itemCountArr = [...Array(parseInt(itemCount)).keys()].map(i => i + 1);
+    
+            const getOffersPromises = itemCountArr.map(async (id) => {
+                const offer = contract.offers(id, address);
+                return offer;
+            });
+    
+            const offers = (await Promise.all(getOffersPromises)).filter(offer => offer.itemId.toNumber() !== 0);
+    
+            const itemIds = offers.map(offer => offer.itemId.toNumber());
+    
+            const itemsPromises = itemIds.map(async (id) => {
+                const item = contract.items(id);
+                return item;
+            });
+    
+            const items = (await Promise.all(itemsPromises));
+    
+            const itemsOwners = items.map(item => item.owner);
+    
+            const offersModified = offers.filter((offer, i) => offer.seller === itemsOwners[i] && items[i].price.toNumber() === 0);
+    
+            return offersModified;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async getOffer(itemId, offerer) {
+        try {
+            const contract = this.marketplaceContract;
+    
+            const offer = await contract.offers(itemId, offerer);
+            return offer;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    async claimItem(itemId, price) {
+        try {
+            const contract = this.marketplaceContract;
+    
+            const transaction = await contract.claimItem(itemId, { value: price, gasLimit: 300000 });
+    
+            const tx = await transaction.wait();
+    
+            return tx.status;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async isMarketplaceOwner(address) {
+        try {
+            const contract = this.marketplaceContract;
+    
+            const owner = await contract.owner();
+    
+            return owner === address;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async withdrawMoney() {
+        try {
+            const contract = this.marketplaceContract;
+    
+            const transaction = await contract.withdraw({ gasLimit: 300000 });
+    
+            const tx = await transaction.wait();
+    
+            return tx.status;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async getMarketplaceBalance() {
+        try {
+            const balance = await this.provider.getBalance(this.marketplace.address);
+    
+            return balance;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deployNFTCollection(name, symbol) {
+        try {
+            const factory = new ethers.ContractFactory(nftABI, nftBytecode.bytecode, this.signerOrProvider);
+    
+            const contract = await factory.deploy(name, symbol);
+    
+            await contract.deployed();
+    
+            return contract;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async approveToken (collectionAddress, tokenId) {
+        try {
+            const contract = new ethers.Contract(collectionAddress, nftABI, this.signerOrProvider);
+    
+            const transaction = await contract.approve(this.marketplace.address, tokenId, { gasLimit: 300000 });
+    
+            const tx = await transaction.wait();
+    
+            return tx.status;
         } catch (error) {
             console.log(error);
         }
