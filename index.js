@@ -4,9 +4,10 @@ import axios from "axios";
 import ipfsClient from "./ipfsClient.js";
 
 class NFTMarketplaceSDK {
-    constructor(signerOrProvider, contractAddress, marketplaceABI, nftABI, nftBytecode) {
+    constructor(signerOrProvider, contractAddress, marketplaceABI, nftABI, nftBytecode, ipfsProvider) {
         this.signerOrProvider = signerOrProvider;
         this.provider = signerOrProvider.provider || signerOrProvider;
+        this.ipfsProvider = ipfsProvider;
         this.marketplace = {
             address: contractAddress,
             abi: marketplaceABI,
@@ -42,7 +43,7 @@ class NFTMarketplaceSDK {
             const URIs = await Promise.all(URIPromises);
 
             const URIsModified = URIs.map((uri) => {
-                return uri.replace('ipfs://', 'https://charity-file-storage.infura-ipfs.io/ipfs/');
+                return uri.replace('ipfs://', this.ipfsProvider);
             });
 
             const metadataPromises = URIsModified.map((uri) => {
@@ -55,7 +56,7 @@ class NFTMarketplaceSDK {
                 return {
                     ...metadata,
                     name: metadata.data.name,
-                    image: metadata.data.image.replace('ipfs://', 'https://charity-file-storage.infura-ipfs.io/ipfs/'),
+                    image: metadata.data.image.replace('ipfs://', this.ipfsProvider),
                     description: metadata.data.description,
                     nft: metadata.data.nft,
                     tokenId: items[metadataArr.indexOf(metadata)].tokenId,
@@ -77,11 +78,11 @@ class NFTMarketplaceSDK {
 
             const nftContract = new ethers.Contract(item.nftContract, this.nftABI, this.signerOrProvider);
 
-            const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace('ipfs://', 'https://charity-file-storage.infura-ipfs.io/ipfs/');
+            const tokenUri = (await nftContract.tokenURI(item.tokenId)).replace('ipfs://', this.ipfsProvider);
 
             const metadata = await axios.get(tokenUri);
 
-            metadata.data.image = metadata.data.image.replace('ipfs://', 'https://charity-file-storage.infura-ipfs.io/ipfs/');
+            metadata.data.image = metadata.data.image.replace('ipfs://', this.ipfsProvider);
 
             return { item, metadata };
         }
@@ -152,7 +153,7 @@ class NFTMarketplaceSDK {
         });
 
         const URIs = (await Promise.all(promises)).map((uri) => {
-            return uri.replace('ipfs://', 'https://charity-file-storage.infura-ipfs.io/ipfs/');
+            return uri.replace('ipfs://', this.ipfsProvider);
         });
 
         const metadataPromises = URIs.map((uri) => {
@@ -165,7 +166,7 @@ class NFTMarketplaceSDK {
             return {
                 ...metadata,
                 name: metadata.data.name,
-                image: metadata.data.image.replace('ipfs://', 'https://charity-file-storage.infura-ipfs.io/ipfs/'),
+                image: metadata.data.image.replace('ipfs://', this.ipfsProvider),
                 description: metadata.data.description,
                 nft: metadata.data.nft,
                 tokenId: ids[i]
@@ -297,7 +298,6 @@ class NFTMarketplaceSDK {
             console.log(error);
         }
     }
-
 
     infuraIpfsClient(projectId, projectSecret) {
 
