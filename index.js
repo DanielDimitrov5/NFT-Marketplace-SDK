@@ -17,6 +17,15 @@ class NFTMarketplaceSDK {
         this.marketplaceContract = new ethers.Contract(this.marketplace.address, this.marketplace.abi, this.signerOrProvider);
     }
 
+    connectSigner(signer) {
+        this.signerOrProvider = signer;
+        this.marketplaceContract = new ethers.Contract(this.marketplace.address, this.marketplace.abi, this.signerOrProvider);
+    }
+
+    isSignerConnected() {
+        return this.signerOrProvider instanceof ethers.Signer;
+    }
+
     async loadItems() {
         try {
             const contract = this.marketplaceContract;
