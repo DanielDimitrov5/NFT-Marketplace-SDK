@@ -1,6 +1,37 @@
 # NFTMarketplaceSDK
 
-The `NFTMarketplaceSDK` class provides methods for interacting with an NFT Marketplace.
+The `NFTMarketplaceSDK` class provides methods for interacting with an [NFT Marketplace](https://github.com/DanielDimitrov5/NFT-Marketplace-Project).
+
+# NFT Marketplace SDK Installation Guide
+
+The NFT Marketplace SDK (`nft-mp-sdk`) can be easily installed using npm, which is a package manager for the JavaScript programming language.
+
+## Prerequisites
+
+Before installing the `nft-mp-sdk`, ensure that you have Node.js and npm installed. If you do not have them installed, download and install [Node.js](https://nodejs.org/) which comes with npm.
+
+## Installation
+
+To install the NFT Marketplace SDK, open a terminal and run the following command (use only the latest version):
+
+`npm install nft-mp-sdk`
+
+## Example Usage
+
+```javascript
+import { ethers } from "ethers";
+import NFTMarketplaceSDK from "nft-mp-sdk";
+
+// Initialize SDK
+const sdk = new NFTMarketplaceSDK(
+    new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_INFURA_KEY"),
+    "0xMarketplaceContractAddress",
+    marketplaceABI,
+    nftABI,
+    nftBytecode,
+    "https://ipfs.infura.io/ipfs/"
+);
+```
 
 ## Class: NFTMarketplaceSDK
 
