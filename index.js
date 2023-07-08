@@ -278,7 +278,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -292,7 +292,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -306,7 +306,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -347,7 +347,7 @@ class NFTMarketplaceSDK {
 
                     const tx = await transaction.wait();
 
-                    return tx.status;
+                    return tx;
                 } catch (error) {
                     console.log(error);
                 }
@@ -363,7 +363,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -420,7 +420,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -481,7 +481,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -507,7 +507,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -545,7 +545,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
