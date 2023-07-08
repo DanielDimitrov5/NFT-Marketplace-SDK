@@ -237,7 +237,7 @@ class NFTMarketplaceSDK {
             if (isApproved !== this.marketplace.address) {
                 const result = await this.approveToken(collectionAddress, tokenId);
 
-                if (result !== 1) {
+                if (result.status !== 1) {
                     return result;
                 }
             }
@@ -252,7 +252,7 @@ class NFTMarketplaceSDK {
 
             const tx = await transaction.wait();
 
-            return tx.status;
+            return tx;
         } catch (error) {
             console.log(error);
         }
@@ -408,7 +408,7 @@ class NFTMarketplaceSDK {
             if (approve != this.marketplace.address) {
                 const aprrovalTx = await this.approveToken(nftContractAddress, tokenId);
 
-                if (aprrovalTx !== 1) {
+                if (aprrovalTx.status !== 1) {
                     console.log("Approval failed");
                     return;
                 }
