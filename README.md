@@ -103,7 +103,7 @@ Adds an item to the NFT marketplace.
 - **collectionAddress**: The address of the NFT collection contract.
 - **tokenId**: The token ID of the item.
 - **metadata**: An object containing metadata such as name, image, and description.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async loadItemsForListing(owner)
 
@@ -119,7 +119,7 @@ Lists an item for sale in the NFT marketplace.
 - **collectionAddress**: The address of the NFT collection contract.
 - **tokenId**: The token ID of the item.
 - **price**: The price for which the item is to be listed.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async checkApproval(collectionAddress, tokenId)
 
@@ -135,7 +135,7 @@ Approves an item to be listed for sale in the NFT marketplace.
 
 - **collectionAddress**: The address of the NFT collection contract.
 - **tokenId**: The token ID of the item.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async buyItem(itemId, price)
 
@@ -143,14 +143,14 @@ Allows a user to purchase an item from the NFT marketplace.
 
 - **itemId**: The ID of the item to be purchased.
 - **price**: The price at which the item is listed.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async addExistingCollection(collectionAddress)
 
 Adds an existing NFT collection to the marketplace.
 
 - **collectionAddress**: The address of the NFT collection contract.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async infuraIpfsClient(projectId, projectSecret)
 
@@ -165,7 +165,7 @@ Creates an Infura IPFS client instance and returns an object with methods for up
   - `mintNFT(collectionAddress, metadata)` - Mints a new NFT.
     - **collectionAddress**: The address of the NFT collection contract.
     - **metadata**: An object containing metadata such as name, image, and description.
-    - **Returns**: `Promise` - Resolves with the status of the transaction.
+    - **Returns**: `Promise` - Resolves with the transaction status.
 
 ### async placeOffer(itemId, price)
 
@@ -173,7 +173,7 @@ Places an offer for an item in the NFT marketplace.
 
 - **itemId**: The ID of the item.
 - **price**: The price of the offer.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async getOffers(itemId)
 
@@ -188,7 +188,7 @@ Accepts an offer for an item in the NFT marketplace.
 
 - **itemId**: The ID of the item.
 - **offerer**: The address of the user making the offer.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async getAccountsOffers(account)
 
@@ -211,7 +211,7 @@ Claims an item in the NFT marketplace for which the user previously made an offe
 
 - **itemId**: The ID of the item.
 - **price**: The price at which the item was offered.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async isMarketplaceOwner(address)
 
@@ -224,7 +224,7 @@ Checks if the provided address is the owner of the marketplace.
 
 Withdraws the balance from the contract to the owner's address.
 
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
 
 ### async getMarketplaceBalance()
 
@@ -246,4 +246,4 @@ Approves the marketplace contract to manage a token on behalf of the token's own
 
 - **collectionAddress**: The address of the NFT collection contract.
 - **tokenId**: The ID of the token.
-- **Returns**: `Promise` - Resolves with the status of the transaction.
+- **Returns**: `Promise` - Resolves with the transaction result.
